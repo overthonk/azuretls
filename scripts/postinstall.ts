@@ -56,7 +56,7 @@ if (import.meta.url === `file://${process.argv[1]}`) {
   }
 
   const fileStream = createWriteStream(LIBRARY_PATH);
-  Readable.fromWeb(response.body).pipe(fileStream);
+  Readable.fromWeb(response.body as any).pipe(fileStream);
 
   fileStream.on('finish', () => {
     if (process.platform !== 'win32') {
