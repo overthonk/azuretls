@@ -1,0 +1,17 @@
+{
+  "compilerOptions": {
+    "target": "ES2020",
+    "module": "nodenext",
+    "lib": ["ES2018", "DOM", "DOM.Iterable", "ES2015"],
+    "declaration": true,
+    "outDir": "./lib",
+    "strict": true,
+    "moduleResolution": "NodeNext",
+    "emitDecoratorMetadata": true,
+    "experimentalDecorators": true,
+    "esModuleInterop": true,
+    "sourceMap": true,
+    "baseUrl": ".",
+  },
+  "exclude": ["node_modules", "dev", "tests", "lib"],
+}

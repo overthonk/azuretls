@@ -1,0 +1,30 @@
+{
+  "name": "azuretls",
+  "version": "0.0.1",
+  "main": "./lib/src/index.min.js",
+  "module": "./lib/src/index.min.js",
+  "types": "./lib/src/index.d.ts",
+  "type": "module",
+  "scripts": {
+    "build": "tsc --module nodenext --outDir ./lib/ &&  esbuild lib/index.js --bundle --outfile=lib/index.min.js --platform=node --format=esm --minify --sourcemap",
+    "prepublishOnly": "npm run build",
+    "postinstall": "node lib/scripts/postinstall.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/overthonk/azuretls"
+  },
+  "keywords": ["azuretls", "tls", "fingerprint", "ja3"],
+  "license": "MIT",
+  "devDependencies": {
+    "@types/bun": "latest",
+    "esbuild": "^0.27.3"
+  },
+  "peerDependencies": {
+    "typescript": "^5"
+  },
+  "dependencies": {
+    "koffi": "^2.15.1",
+    "undici": "^7.22.0"
+  }
+}
