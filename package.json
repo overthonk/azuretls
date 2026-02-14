@@ -6,7 +6,7 @@
   "types": "./lib/src/index.d.ts",
   "type": "module",
   "scripts": {
-    "build": "tsc --module nodenext --outDir ./lib/ &&  esbuild lib/index.js --bundle --outfile=lib/index.min.js --platform=node --format=esm --minify --sourcemap",
+    "build": "tsc --module nodenext --outDir ./lib/",
     "prepublishOnly": "npm run build",
     "postinstall": "node lib/scripts/postinstall.js"
   },
@@ -17,8 +17,7 @@
   "keywords": ["azuretls", "tls", "fingerprint", "ja3"],
   "license": "MIT",
   "devDependencies": {
-    "@types/bun": "latest",
-    "esbuild": "^0.27.3"
+    "@types/bun": "latest"
   },
   "peerDependencies": {
     "typescript": "^5"
