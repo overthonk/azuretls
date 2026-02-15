@@ -130,7 +130,8 @@ class AzureTLSSession {
     const requestData: any = {
       method,
       url,
-      resp_body_b64: true
+      resp_body_b64: true,
+      resp_headers_b64: true
     };
 
     if (body !== undefined) requestData.body = body;

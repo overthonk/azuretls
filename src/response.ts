@@ -7,7 +7,7 @@ export default class AzureTLSResponse {
 
   constructor(response: any) {
     this.status = response.status_code
-    this.headers = new Headers(JSON.parse(response.headers))
+    this.headers = new Headers(JSON.parse(atob(response.headers)))
     this.url = response.url,
     this.ok = response.status_code >= 200 && response.status_code <= 299
 

@@ -32,7 +32,7 @@ const getFormattedSystemInfo = () => {
 };
 
 const sysInfo = getFormattedSystemInfo();
-const version = '1.12.13'
+const version = '1.12.14'
 const baseUrl = 'https://github.com/overthonk/azuretls-client/releases/download/';
 const LIBRARY_URL = `${baseUrl}/v${version}/azuretls-${version}-${sysInfo.platform}-${sysInfo.arch}.${sysInfo.ext}`;
 const LIBRARY_PATH = join(__dirname, '../native', `azuretls-${version}-${sysInfo.platform}-${sysInfo.arch}.${sysInfo.ext}`);
