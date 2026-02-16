@@ -1,24 +1,36 @@
+interface FfiResponse {
+  status_code: number;
+  body: string | null;
+  body_len: number;
+  headers: string | null;
+  url: string | null;
+  error: string | null;
+  protocol: string | null;
+}
+
 export default class AzureTLSResponse {
   body: string | null = null;
   headers: Headers;
   ok: boolean;
   status: number;
   url: string;
+  protocol: string;
 
-  constructor(response: any) {
-    this.status = response.status_code
-    this.headers = new Headers(JSON.parse(atob(response.headers)))
-    this.url = response.url,
-    this.ok = response.status_code >= 200 && response.status_code <= 299
+  constructor(response: FfiResponse) {
+    this.status = response.status_code;
+    this.headers = this.parseHeaders(response.headers);
+    this.url = response.url ?? '';
+    this.protocol = response.protocol ?? '';
+    this.ok = response.status_code >= 200 && response.status_code <= 299;
 
     if (response.body && response.body_len > 0) {
-      this.body = response.body
+      this.body = response.body;
     }
   }
 
   text(): string {
     if (!this.body) return '';
-    return atob(this.body);
+    return this.decodeBase64ToUtf8(this.body);
   }
 
   json(): any | null {
@@ -29,16 +41,35 @@ export default class AzureTLSResponse {
 
   arrayBuffer(): ArrayBuffer {
     if (!this.body) return new ArrayBuffer(0);
-    return Uint8Array.from(atob(this.body), c => c.charCodeAt(0)).buffer;
+    const bytes = this.decodeBase64ToBytes(this.body);
+    return bytes.buffer;
   }
 
   blob(): Blob {
     if (!this.body) return new Blob();
-    return new Blob([Uint8Array.from(atob(this.body), c => c.charCodeAt(0))]);
+    return new Blob([this.decodeBase64ToBytes(this.body)]);
   }
 
   bytes(): Uint8Array {
     if (!this.body) return new Uint8Array(0);
-    return Uint8Array.from(atob(this.body), c => c.charCodeAt(0));
+    return this.decodeBase64ToBytes(this.body);
+  }
+
+  private decodeBase64ToUtf8(b64: string): string {
+    return Buffer.from(b64, 'base64').toString('utf8');
+  }
+
+  private decodeBase64ToBytes(b64: string): Uint8Array<ArrayBuffer> {
+    const buffer = Buffer.from(b64, 'base64');
+    const bytes = new Uint8Array(buffer.byteLength);
+    bytes.set(buffer);
+    return bytes as Uint8Array<ArrayBuffer>;
+  }
+
+  private parseHeaders(headersB64: string | null): Headers {
+    if (!headersB64) return new Headers();
+    const decoded = this.decodeBase64ToUtf8(headersB64);
+    if (!decoded) return new Headers();
+    return new Headers(JSON.parse(decoded));
   }
 }

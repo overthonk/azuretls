@@ -8,7 +8,8 @@ const CFfiResponse = koffi.struct('CFfiResponse', {
   body_len: 'int',
   headers: 'char *',
   url: 'char *',
-  error: 'char *'
+  error: 'char *',
+  protocol: 'char *'
 });
 
 interface SessionConfig {
