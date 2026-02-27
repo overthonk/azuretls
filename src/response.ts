@@ -10,7 +10,7 @@ interface FfiResponse {
 
 export default class AzureTLSResponse {
   body: string | null = null;
-  headers: Headers;
+  headers: Map<string, string | string[]>;
   ok: boolean;
   status: number;
   url: string;
@@ -66,10 +66,17 @@ export default class AzureTLSResponse {
     return bytes as Uint8Array<ArrayBuffer>;
   }
 
-  private parseHeaders(headersB64: string | null): Headers {
-    if (!headersB64) return new Headers();
+  private parseHeaders(headersB64: string | null): Map<string, string | string[]> {
+    if (!headersB64) return new Map();
     const decoded = this.decodeBase64ToUtf8(headersB64);
-    if (!decoded) return new Headers();
-    return new Headers(JSON.parse(decoded));
+    if (!decoded) return new Map();
+
+    const parsed: Record<string, string[]> = JSON.parse(decoded);
+    return new Map(
+      Object.entries(parsed).map(([name, values]) => [
+        name.toLowerCase(),
+        values.length == 1 ? values[0] : values,
+      ])
+    );
   }
 }

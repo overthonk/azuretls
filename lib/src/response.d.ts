@@ -9,7 +9,7 @@ interface FfiResponse {
 }
 export default class AzureTLSResponse {
     body: string | null;
-    headers: Headers;
+    headers: Map<string, string | string[]>;
     ok: boolean;
     status: number;
     url: string;
