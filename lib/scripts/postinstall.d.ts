@@ -1,2 +1,3 @@
 #!/usr/bin/env node
-export declare const getLibraryPath: () => string;
+import { getLibraryPath } from './library-path.js';
+export { getLibraryPath };

@@ -1,50 +1,14 @@
 #!/usr/bin/env node
 import { existsSync, mkdirSync, createWriteStream, chmodSync } from 'fs';
-import { join, dirname } from 'path';
-import { fileURLToPath } from 'url';
 import { Readable } from 'stream';
+import { dirname } from 'path';
+import { fileURLToPath } from 'url';
+import { LIBRARY_PATH, LIBRARY_URL, getLibraryPath } from './library-path.js';
 
-const __dirname = dirname(fileURLToPath(import.meta.url));
-
-const getFormattedSystemInfo = () => {
-  const archMap: Record<string, string> = {
-    'x64': 'amd64',
-    'ia32': '386',
-    'arm64': 'arm64',
-    'arm': 'arm'
-  };
-
-  if (process.platform == 'win32') return {
-    platform: 'windows',
-    arch: archMap[process.arch] || process.arch,
-    ext: 'dll'
-  };
-  if (process.platform == 'darwin') return {
-    platform: 'darwin',
-    arch: archMap[process.arch] || process.arch,
-    ext: 'dylib'
-  }
-  return {
-    platform: 'linux',
-    arch: archMap[process.arch] || process.arch,
-    ext: 'so'
-  }
-};
-
-const sysInfo = getFormattedSystemInfo();
-const version = '1.12.14'
-const baseUrl = 'https://github.com/overthonk/azuretls-client/releases/download/';
-const LIBRARY_URL = `${baseUrl}/v${version}/azuretls-${version}-${sysInfo.platform}-${sysInfo.arch}.${sysInfo.ext}`;
-const LIBRARY_PATH = join(__dirname, '../native', `azuretls-${version}-${sysInfo.platform}-${sysInfo.arch}.${sysInfo.ext}`);
-
-export const getLibraryPath = () => {
-  return join(__dirname, '../native', `azuretls-${version}-${sysInfo.platform}-${sysInfo.arch}.${sysInfo.ext}`);
-};
-
-if (import.meta.url === `file://${process.argv[1]}`) {
+const run = async () => {
   if (existsSync(LIBRARY_PATH)) {
     console.log('Library already exists');
-    process.exit(0);
+    return;
   }
 
   mkdirSync(dirname(LIBRARY_PATH), { recursive: true });
@@ -69,4 +33,12 @@ if (import.meta.url === `file://${process.argv[1]}`) {
     console.error('Failed to write library:', err.message);
     process.exit(1);
   });
+};
+
+export { getLibraryPath };
+
+const scriptPath = process.argv[1] ? fileURLToPath(import.meta.url) : '';
+
+if (process.argv[1] && scriptPath === process.argv[1]) {
+  void run();
 }
